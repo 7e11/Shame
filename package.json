@@ -2,18 +2,13 @@
   "name": "shamediscordbot",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/7e11/Shame.git"
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "steamapi": "^2.1.1"
   },
-  "author": "Evan Hruskar",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/7e11/Shame/issues"
-  },
-  "homepage": "https://github.com/7e11/Shame#readme"
+  "devDependencies": {}
 }
