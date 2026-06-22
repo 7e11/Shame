@@ -19,7 +19,7 @@ export class ShameStack extends cdk.Stack {
     const shameBot = new lambdaNodejs.NodejsFunction(this, "ShameBot", {
       entry: path.join(__dirname, "../src/index.ts"),
       handler: "handler",
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_LATEST,
       memorySize: 1024,
       timeout: cdk.Duration.seconds(30),
       logGroup,
