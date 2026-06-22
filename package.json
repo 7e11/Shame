@@ -10,6 +10,7 @@
     "synth": "cdk synth"
   },
   "dependencies": {
+    "@aws-sdk/client-ssm": "^3.0.0",
     "discord.js": "^14.14.1",
     "steamapi": "^2.2.0"
   },

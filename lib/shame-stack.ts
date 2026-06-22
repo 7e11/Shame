@@ -2,6 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as lambdaNodejs from "aws-cdk-lib/aws-lambda-nodejs";
 import * as logs from "aws-cdk-lib/aws-logs";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import { Construct } from "constructs";
@@ -28,6 +29,15 @@ export class ShameStack extends cdk.Stack {
         sourceMap: true,
       },
     });
+
+    const discordTokenParam = ssm.StringParameter.fromSecureStringParameterAttributes(this, "DiscordToken", {
+      parameterName: "/shame/discord-token",
+    });
+    const steamApiKeyParam = ssm.StringParameter.fromSecureStringParameterAttributes(this, "SteamApiKey", {
+      parameterName: "/shame/steam-api-key",
+    });
+    discordTokenParam.grantRead(shameBot);
+    steamApiKeyParam.grantRead(shameBot);
 
     new events.Rule(this, "ShameBotSchedule", {
       schedule: events.Schedule.rate(cdk.Duration.days(1)),

@@ -1,26 +1,35 @@
 import SteamAPI from "steamapi";
 import { Client, GatewayIntentBits } from "discord.js";
+import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm";
 
-const discordToken = process.env.DISCORD_TOKEN!;
-const steamApiKey = process.env.STEAM_API_KEY!;
+const ssmClient = new SSMClient({});
+
+async function getParameter(name: string): Promise<string> {
+  const response = await ssmClient.send(new GetParameterCommand({ Name: name, WithDecryption: true }));
+  return response.Parameter!.Value!;
+}
 
 const lustboisDiscordId = "192761549029507072";
 const ryanDiscordId = "148840937055846400";
 const ryanSteamId64 = "76561198068282941";
 const finalFantasySteamId = 39210;
 
-const steam = new SteamAPI(steamApiKey);
-const discord = new Client({
-  intents: [GatewayIntentBits.GuildMembers],
-});
-
 export const handler = async (event: unknown, context: { functionName: string }) => {
+  const [discordToken, steamApiKey] = await Promise.all([
+    getParameter("/shame/discord-token"),
+    getParameter("/shame/steam-api-key"),
+  ]);
+
   const time = new Date();
   console.log(`Your cron function "${context.functionName}" ran at ${time}`);
+
+  const steam = new SteamAPI(steamApiKey);
+  const discord = new Client({ intents: [GatewayIntentBits.GuildMembers] });
+
   await discord.login(discordToken);
   console.log("Shame is online!");
   try {
-    await updateRyanNickname();
+    await updateRyanNickname(steam, discord);
   } catch (e) {
     console.log(e);
   } finally {
@@ -28,7 +37,7 @@ export const handler = async (event: unknown, context: { functionName: string })
   }
 };
 
-async function updateRyanNickname() {
+async function updateRyanNickname(steam: SteamAPI, discord: Client) {
   const ryanGames = await steam.getUserOwnedGames(ryanSteamId64);
   const finalFantasyGame = ryanGames.find((game: any) => game.appID === finalFantasySteamId);
   if (finalFantasyGame == null) {
@@ -49,4 +58,3 @@ async function updateRyanNickname() {
   console.log(`New Nickname: ${updatedNickname}`);
   await ryanDiscord.setNickname(updatedNickname);
 }
-
