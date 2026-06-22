@@ -27,10 +27,6 @@ export class ShameStack extends cdk.Stack {
         minify: false,
         sourceMap: true,
       },
-      environment: {
-        DISCORD_TOKEN: process.env.DISCORD_TOKEN!,
-        STEAM_API_KEY: process.env.STEAM_API_KEY!,
-      },
     });
 
     new events.Rule(this, "ShameBotSchedule", {
