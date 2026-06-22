@@ -11,6 +11,11 @@ export class ShameStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const discordToken = this.node.getContext("discordToken");
+    const steamApiKey = this.node.getContext("steamApiKey");
+    if (!discordToken) throw new Error("Missing required context: discordToken");
+    if (!steamApiKey) throw new Error("Missing required context: steamApiKey");
+
     const logGroup = new logs.LogGroup(this, "ShameBotLogs", {
       retention: logs.RetentionDays.TWO_WEEKS,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -28,8 +33,8 @@ export class ShameStack extends cdk.Stack {
         sourceMap: true,
       },
       environment: {
-        DISCORD_TOKEN: process.env.DISCORD_TOKEN!,
-        STEAM_API_KEY: process.env.STEAM_API_KEY!,
+        DISCORD_TOKEN: discordToken,
+        STEAM_API_KEY: steamApiKey,
       },
     });
 
