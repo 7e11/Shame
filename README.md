@@ -6,5 +6,5 @@ A Discord bot that tags a friend with their current Final Fantasy XIV hours. Run
 ## Deploy
 
 ```bash
-npm run deploy -- -c discordToken=<token> -c steamApiKey=<key>
+npm run deploy
 ```
